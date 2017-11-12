@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<meta name="description" content="Johny James Personal Blog">
+<meta name="keywords" content="blog,programing,python,go,software,engineering">
+
+<base href="https://nu11p01n73R.github.io/">
+
+<title>Johny James</title>
+
+<meta name="generator" content="Hugo 0.26" />
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400|Roboto+Slab:400,700|Roboto:300,300i,400,400i,500,500i,700,700i">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://nu11p01n73R.github.io/css/main.css">
+
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="theme-color" content="#ffffff">
+
+</head>
+<body lang="en-US">
+<div class="container">
+
+
+<header class="row text-left title">
+  <h1 class="title">Generating Random String</h1>
+</header>
+<section id="category-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-left meta">
+      PUBLISHED ON NOV 12, 2017 
+      
+      
+    </h6>
+  </div>
+  
+</section>
+<section id="content-pane" class="row">
+  <div class="col-md-12 text-justify content">
+    
+
+<p>Generating random string is a very common problem that we encounter
+at often. How easy is it to generate a random string of <code>n</code> characters?
+How efficiently can we generate the random string.</p>
+
+<h1 id="easy-way">Easy Way</h1>
+
+<p>Lets say we need to generate a string from alphabets,</p>
+
+<pre><code>const letters = &quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+</code></pre>
+
+<p>The easiest way is to get a random integer less than 52, and then use
+it as an index into <code>letters</code> to add them up.</p>
+
+<p>We could write it as,</p>
+
+<pre><code>func getRandomString(n int) string {
+        const letter = &quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+
+        random := &quot;&quot;
+        for i := 0; i &lt; n; i++ {
+                index := rand.Intn(52)
+                random += string(letter[index])
+        }
+
+        return random
+}
+</code></pre>
+
+<p>This is a good way, but how good it if we want to generate 1 million strings?</p>
+
+<pre><code>Byte array:     1.395217759s
+</code></pre>
+
+<p>Can we do better?</p>
+
+<hr />
+
+<h1 id="using-bit-manipulation">Using Bit Manipulation</h1>
+
+<p>The <code>Intn</code> solution is in-efficient because it calls <code>Int32n</code> which
+inturn calls <code>Int32</code>.</p>
+
+<p>Another way to generate the bits using <code>Int32</code> or <code>Int63</code> directly.
+To be more efficient, lets take <code>Int63</code>. This returns an int with
+63 bits.</p>
+
+<p>Now, our <code>letters</code> has 52 elements in it. So we require min <code>6</code> bits to
+represent all of them.</p>
+
+<p>So if we generate one <code>63 bit</code> random number we can get <code>10</code> <code>6bits</code> out
+of it.</p>
+
+<p>We check if that number generated is less than 52, if so we get an index
+for <code>letters</code>, add it to the <code>random</code> array and so on.</p>
+
+<p>We could write it as,</p>
+
+<pre><code>func getRandomString(n int) string {
+        const letter = &quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+
+        random := make([]byte, n)
+        mask := 1&lt;&lt;6 - 1
+        num := rand.Int63()
+
+        for i := 0; i &lt; n; {
+                index := int(num) &amp; mask
+                if index &lt; len(letter) {
+                        random[i] = letter[index]
+                        i++
+                        num = num &gt;&gt; 6
+                } else {
+                        num = num &gt;&gt; 1
+                }
+
+                if num == 0 {
+                        num = rand.Int63()
+                }
+        }
+
+        return string(random)
+}
+</code></pre>
+
+<hr />
+
+<h1 id="reference">Reference</h1>
+
+<ul>
+<li>Ideas stolen from <a href="https://stackoverflow.com/a/31832326/3150943">this Stack Overflow answer</a></li>
+</ul>
+
+  </div>
+</section>
+<section id="tag-pane" class="row meta">
+  
+  <div class="col-md-12">
+    <h6 class="text-right meta">
+      
+      
+    </h6>
+  </div>
+  
+</section>
+
+
+
+
+<section id="menu-pane" class="row menu text-center">
+  
+  
+  
+  
+  
+  <h4 class="text-center"><a class="menu-item" href="https://nu11p01n73R.github.io/">home</a></h4>
+</section>
+
+
+
+<footer class="row text-center footer">
+  <hr />
+  
+  <h6 class="text-center copyright">© 2017. Johny James</h6>
+  
+  <h6 class="text-center powered">Powered by <a href="https://gohugo.io/">Hugo</a> &amp; <a href="https://github.com/shenoybr/hugo-goa">Goa</a>.</h6>
+  
+  
+</footer>
+
+</div>
+
+
+
+
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-105269444-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
+
+

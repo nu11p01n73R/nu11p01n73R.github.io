@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://nu11p01n73R.github.io/posts/random_string/</loc>
+    <lastmod>2017-11-12T21:00:24+05:30</lastmod>
+  </url>
+  
+  <url>
     <loc>https://nu11p01n73R.github.io/about/</loc>
     <lastmod>2017-08-24T12:02:01+05:30</lastmod>
   </url>
@@ -14,7 +19,13 @@
   
   <url>
     <loc>https://nu11p01n73R.github.io/</loc>
-    <lastmod>2017-08-24T12:02:01+05:30</lastmod>
+    <lastmod>2017-11-12T21:00:24+05:30</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://nu11p01n73R.github.io/posts/</loc>
+    <lastmod>2017-11-12T21:00:24+05:30</lastmod>
     <priority>0</priority>
   </url>
   
